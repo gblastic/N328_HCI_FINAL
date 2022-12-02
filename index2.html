@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <style>
+      body {
+        background-color: #e8e8e8;
+      }
+      button {
+        color: blue;
+        font-family: Georgia, "Times New Roman", Times, serif;
+      }
+      p {
+        font-size: 30px;
+        color: orange;
+        font-family: Georgia, "Times New Roman", Times, serif;
+        text-align: center;
+      }
+      rect:hover {
+        fill: blue;
+        outline: solid;
+        opacity: 0.3;
+      }
+
+      .p2 {
+        font-size: 20px;
+        color: orange;
+        font-family: Georgia, "Times New Roman", Times, serif;
+      }
+
+      #container {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <p><b>Overwatch Hero Comparison</b></p>
+  <p class="p2">Click on a button below to see the different statistics for each hero:</p>
+  <div id="container">
+  <button onclick="update('health')">Health</button>
+  <button onclick="update('shields')">Shield</button>
+  <button onclick="update('armor')">Armor</button>
+  <button onclick="update('Age')">Age</button>
+  <button onclick="update('Difficulty')">Difficulty</button>
+  <br />
+  <P class="p2">Click these two buttons to switch between color modes (for people who are viusally impaired): </P>
+  <button onclick="changeColor('Orange')">Normal Color Mode</button>
+  <button onclick="changeColor('blue')">Alternate Color Mode</button>
+</div>
+  <div id="visualization"></div>
+  <body>
+    <script>
+        
+      // box where data is in
+      var margin = { top: 20, right: 20, bottom: 70, left: 40 },
+        width = 1450 - margin.left - margin.right,
+        height = 700 - margin.top - margin.bottom;
+
+      // pops data
+      var svg = d3
+        .select("#visualization")
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      //get info from CSV
+      d3.csv("owhero2.csv", function (data) {
+        data.sort(function (b, a) {
+          return a.Value - b.Value;
+        });
+
+        //the x axis
+        var x = d3
+          .scaleBand()
+          .range([0, width])
+          .domain(
+            data.map(function (d) {
+              return d.Hero_name;
+            })
+          )
+          .padding(0.1);
+        svg
+          .append("g")
+          .attr("transform", "translate(0," + height + ")")
+          .call(d3.axisBottom(x))
+          .selectAll("text")
+          .attr("transform", "translate(-12,10)rotate(-90)")
+          .style("text-anchor", "end");
+
+        //the y axis
+        var y = d3.scaleLinear().domain([0, 700]).range([height, 0]);
+        svg.append("g").call(d3.axisLeft(y));
+        
+
+        // Makes the bars
+        svg
+          .selectAll("bar")
+          .data(data)
+          .enter()
+          .append("rect")
+          .attr("x", function (d) {
+            return x(d.Hero_name);
+          })
+          .attr("y", function (d) {
+            return y(d.Total_health);
+          })
+          .attr("width", x.bandwidth())
+          .attr("height", function (d) {
+            return height - y(d.Total_health);
+          })
+          .attr("fill", "orange")
+
+          .append("title") .text(function(d) {
+return "This character has " + d.Total_health + " health"; });
+
+
+        //style
+      });
+
+//something
+
+      // changes color of graph
+      function changeColor(color) {
+        d3.selectAll("rect").style("fill", color);
+      }
+
+      //SHIELD
+      function update(graphName) {
+        document.getElementById("visualization").innerHTML = "";
+        // window.alert("Overwatch Graph Updated");
+        var margin = { top: 20, right: 20, bottom: 70, left: 40 },
+          width = 1450 - margin.left - margin.right,
+          height = 700 - margin.top - margin.bottom;
+
+        // pops data
+        var svg = d3
+          .select("#visualization")
+          .append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr(
+            "transform",
+            "translate(" + margin.left + "," + margin.top + ")"
+          );
+
+        //get info from CSV
+        d3.csv("owhero2.csv", function (data) {
+          data.sort(function (b, a) {
+            return a.Value - b.Value;
+          });
+
+          //the x axis
+          var x = d3
+            .scaleBand()
+            .range([0, width])
+            .domain(
+              data.map(function (d) {
+                return d.Hero_name;
+              })
+            )
+            .padding(0.1);
+          svg
+            .append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x))
+            .selectAll("text")
+            .attr("transform", "translate(-12,10)rotate(-90)")
+            .style("text-anchor", "end");
+
+          //the y axis
+         // var y = d3.scaleLinear().domain([0, 800]).range([height, 0]);
+          //svg.append("g").call(d3.axisLeft(y));
+
+          // Choose the right data
+          if (graphName == "shields") {
+            // Makes the bars
+            //window.alert("Now Showing Shields");
+//the y axis
+var y = d3.scaleLinear().domain([0, 300]).range([height, 0]);
+        svg.append("g").call(d3.axisLeft(y));
+
+            svg
+              .selectAll("bar")
+              .data(data)
+              .enter()
+              .append("rect")
+              .attr("x", function (d) {
+                return x(d.Hero_name);
+              })
+              .attr("y", function (d) {
+                return y(d.Total_shields);
+              })
+              .attr("width", x.bandwidth())
+              .attr("height", function (d) {
+                return height - y(d.Total_shields);
+              })
+              .attr("fill", "orange")
+              .append("title") .text(function(d) {
+return "This character has " + d.Total_shields + " shield"; });
+          } else if (graphName == "health") {
+            // Makes the bars
+            var y = d3.scaleLinear().domain([0, 700]).range([height, 0]);
+        svg.append("g").call(d3.axisLeft(y));
+            svg
+              .selectAll("bar")
+              .data(data)
+              .enter()
+              .append("rect")
+              .attr("x", function (d) {
+                return x(d.Hero_name);
+              })
+              .attr("y", function (d) {
+                return y(d.Total_health);
+              })
+              .attr("width", x.bandwidth())
+              .attr("height", function (d) {
+                return height - y(d.Total_health);
+              })
+              .attr("fill", "orange")
+              .append("title") .text(function(d) {
+return "This character has " + d.Total_health + " health"; });
+          } else if (graphName == "armor") {
+            // Makes the bars
+            var y = d3.scaleLinear().domain([0, 300]).range([height, 0]);
+        svg.append("g").call(d3.axisLeft(y));
+            svg
+              .selectAll("bar")
+              .data(data)
+              .enter()
+              .append("rect")
+              .attr("x", function (d) {
+                return x(d.Hero_name);
+              })
+              .attr("y", function (d) {
+                return y(d.Total_armor);
+              })
+              .attr("width", x.bandwidth())
+              .attr("height", function (d) {
+                return height - y(d.Total_armor);
+              })
+              .attr("fill", "orange")
+              .append("title") .text(function(d) {
+return "This character has " + d.Total_armor + " armor"; });
+          } else if (graphName == "Age") {
+            // Makes the bars
+            var y = d3.scaleLinear().domain([0, 100]).range([height, 0]);
+        svg.append("g").call(d3.axisLeft(y));
+            svg
+              .selectAll("bar")
+              .data(data)
+              .enter()
+              .append("rect")
+              .attr("x", function (d) {
+                return x(d.Hero_name);
+              })
+              .attr("y", function (d) {
+                return y(d.Age);
+              })
+              .attr("width", x.bandwidth())
+              .attr("height", function (d) {
+                return height - y(d.Age);
+              })
+              .attr("fill", "orange")
+              .append("title") .text(function(d) {
+return "This character is " + d.Age + " years old"; });
+          }
+          else if (graphName == "Difficulty") {
+            // Makes the bars
+            var y = d3.scaleLinear().domain([0, 4]).range([height, 0]);
+        svg.append("g").call(d3.axisLeft(y));
+            svg
+              .selectAll("bar")
+              .data(data)
+              .enter()
+              .append("rect")
+              .attr("x", function (d) {
+                return x(d.Hero_name);
+              })
+              .attr("y", function (d) {
+                return y(d.Diff);
+              })
+              .attr("width", x.bandwidth())
+              .attr("height", function (d) {
+                return height - y(d.Diff);
+              })
+              .attr("fill", "orange")
+              .append("title") .text(function(d) {
+return "This character is " + d.Diff + " stars"; });
+          }
+
+          //style
+        });
+      }
+
+      function test(name) {
+        console.log(name);
+      }
+    </script>
+  </body>
+</html>
