@@ -8,4 +8,4 @@ This will include my video, PDF documentation, CSV used, and code. If anything d
 
 Youtube video:
 https://youtu.be/oVGObWvr3PU
-(please copy and paste it in browser) or look up "HCI FINAL Gaige Blastic" on Youtube.
+(please copy and paste it in browser if link doesn't work) or look up "HCI FINAL Gaige Blastic" on Youtube.
