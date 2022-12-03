@@ -1,6 +1,6 @@
 # N328_HCI_Final
 
-GitHub Pages Link: https://gblastic.github.io/N328_HCI_Final/
+GitHub Pages Link: https://gblastic.github.io/N328_HCI_Final/index2.html
 
 This will include my video, PDF documentation, CSV used, and code. If anything doesn't work, then reachout to me on canvas please.
 
